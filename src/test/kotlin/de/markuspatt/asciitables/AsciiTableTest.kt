@@ -93,9 +93,9 @@ class AsciiTableTest : FunSpec({
 
             asciiTable.printToString() shouldBe """
             dummy 1
-            ~~~~~~~
+            
 
-        """.trimIndent().replace('~', ' ')
+        """.trimIndent()
         }
 
         test("print one long column with one value") {
@@ -111,9 +111,9 @@ class AsciiTableTest : FunSpec({
 
             asciiTable.printToString() shouldBe """
             dummy 1
-            1~~~~~~
+            1
 
-        """.trimIndent().replace('~', ' ')
+        """.trimIndent()
         }
 
     }
@@ -146,6 +146,26 @@ class AsciiTableTest : FunSpec({
             asciiTable.printToString() shouldBe """
             dummy 1 dummy 2
             value 1 value 2
+
+        """.trimIndent()
+
+        }
+
+        test("print two string columns with multiple values") {
+            val asciiTable = asciiTable {
+                stringColumn("dummy 1")
+                stringColumn("dummy 2")
+            }
+
+            asciiTable.add("value 1.1", "value 2.1")
+            asciiTable.add("value 1.2", "value 2.2")
+            asciiTable.add("value 1.3", "value 2.3")
+
+            asciiTable.printToString() shouldBe """
+            dummy 1   dummy 2
+            value 1.1 value 2.1
+            value 1.2 value 2.2
+            value 1.3 value 2.3
 
         """.trimIndent()
 

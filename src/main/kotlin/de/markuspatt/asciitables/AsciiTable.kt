@@ -7,7 +7,7 @@ internal typealias RowData = List<Any?>
 
 
 class AsciiTable internal constructor(
-    private val columns: List<TableColumn<*>>
+    private val columns: List<TableColumn<*>>,
 ) {
 
     private val data = ArrayList<RowData>()
@@ -63,7 +63,7 @@ class AsciiTable internal constructor(
     }
 
     fun printTo(target: Appendable) {
-        renderLines().forEach {target.append("$it\n")}
+        renderLines().forEach { target.append("$it\n") }
     }
 
     fun renderLines(): List<String> {
@@ -71,11 +71,19 @@ class AsciiTable internal constructor(
             val delimiter = " "
             val headerRow = StringJoiner(delimiter)
 
-            for (tableColumn in columns) {
+            val lastIndex = columns.lastIndex
+
+            columns.forEachIndexed { index, tableColumn ->
+                val value = tableColumn.header
+                val width = if (index == lastIndex)
+                    value.length
+                else
+                    maxValueLengths[tableColumn.index]
+
                 headerRow.add(
                     tableColumn.pad(
-                        tableColumn.header,
-                        maxValueLengths[tableColumn.index]
+                        value,
+                        width
                     )
                 )
             }
@@ -84,11 +92,17 @@ class AsciiTable internal constructor(
 
             for (datum in data) {
                 val row = StringJoiner(delimiter)
-                for (tableColumn in columns) {
+                columns.forEachIndexed { index, tableColumn ->
+                    val value = tableColumn.formatValue(datum)
+                    val width = if (index == lastIndex)
+                        value.length
+                    else
+                        maxValueLengths[tableColumn.index]
+
                     row.add(
                         tableColumn.pad(
-                            tableColumn.formatValue(datum),
-                            maxValueLengths[tableColumn.index]
+                            value,
+                            width
                         )
                     )
                 }

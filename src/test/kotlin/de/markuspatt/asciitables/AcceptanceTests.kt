@@ -129,16 +129,22 @@ class AcceptanceTests : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-                dummy 1    dummy 2      dummy 3
-                asd     1234567890 1234567890,1
+                +-------+----------+------------+
+                |dummy 1|   dummy 2|     dummy 3|
+                +-------+----------+------------+
+                |asd    |1234567890|1234567890,1|
+                +-------+----------+------------+
     
             """.trimIndent()
 
         }
+
         test("custom border 1") {
             val asciiTable = asciiTable {
                 withBorder {
-
+                    edge = '#'
+                    horizontal = '='
+                    vertical = '"'
                 }
 
                 stringColumn("dummy 1")
@@ -157,12 +163,82 @@ class AcceptanceTests : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-                dummy 1    dummy 2      dummy 3
-                asd     1234567890 1234567890,1
+                #=======#==========#============#
+                "dummy 1"   dummy 2"     dummy 3"
+                #=======#==========#============#
+                "asd    "1234567890"1234567890,1"
+                #=======#==========#============#
     
             """.trimIndent()
 
         }
+
+        test("custom border 2") {
+            val asciiTable = asciiTable {
+                withBorder {
+                    edge = '#'
+                    horizontal = null
+                    vertical = '"'
+                }
+
+                stringColumn("dummy 1")
+                longColumn("dummy 2") {
+                    align = Align.RIGHT
+                }
+                doubleColumn("dummy 3") {
+                    align = Align.RIGHT
+
+                    precision = 1
+                }
+            }
+
+            asciiTable.add(
+                "asd", 1234567890, 1234567890.12345
+            )
+
+            asciiTable.printToString() shouldBe """
+                "dummy 1"   dummy 2"     dummy 3"
+                "asd    "1234567890"1234567890,1"
+    
+            """.trimIndent()
+
+        }
+
+        test("custom border 3") {
+            val asciiTable = asciiTable {
+                withBorder {
+                    edge = null
+                    vertical = null
+                    horizontal = '='
+                }
+
+                stringColumn("dummy 1")
+                longColumn("dummy 2") {
+                    align = Align.RIGHT
+                }
+                doubleColumn("dummy 3") {
+                    align = Align.RIGHT
+
+                    precision = 1
+                }
+            }
+
+            asciiTable.add(
+                "asd", 1234567890, 1234567890.12345
+            )
+
+            asciiTable.printToString() shouldBe """
+                ===============================
+                dummy 1    dummy 2      dummy 3
+                ===============================
+                asd     1234567890 1234567890,1
+                ===============================
+    
+            """.trimIndent()
+
+        }
+
+
     }
 
 

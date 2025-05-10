@@ -2,19 +2,18 @@ package de.markuspatt.asciitables
 
 import de.markuspatt.asciitables.builders.AsciiTableBuilder
 import java.io.StringWriter
-import java.util.*
-import kotlin.math.max
 
 internal typealias RowData = List<Any?>
 
 
 class AsciiTable internal constructor(
-    private val columns: List<TableColumn<*>>,
+    internal val columns: List<TableColumn<*>>,
+    internal val border: TableBorder,
 ) {
 
-    private val data = ArrayList<RowData>()
+    internal val data = ArrayList<RowData>()
 
-    private val maxValueLengths: MutableMap<TableColumn<*>, Int> =
+    internal val maxValueLengths: MutableMap<TableColumn<*>, Int> =
         columns.associateWith { it.header.length }.toMutableMap()
 
     fun add(vararg values: Any?) {
@@ -63,46 +62,7 @@ class AsciiTable internal constructor(
         renderLines().forEach { target.append("$it\n") }
     }
 
-    fun renderLines(): List<String> = buildList {
-        val delimiter = " "
-
-        val cellRenderers = columns.associateWith {
-            CellRenderer(
-                max(it.minWidth, maxValueLengths[it]!!),
-                it.maxWidth,
-                it.align
-            )
-        }
-
-        val renderValuesToRow: ((TableColumn<*>) -> String) -> String = { formatValue ->
-            StringJoiner(delimiter).let { row ->
-                columns
-                    .map { it to cellRenderers[it]!! }
-                    .map { (tableColumn, renderer) -> formatValue(tableColumn) to renderer }
-                    .map { (value, renderer) -> renderer.renderValue(value) }
-                    .forEach(row::add)
-
-                row.toString().trimEnd()
-            }
-
-        }
-
-
-        add(
-            renderValuesToRow {
-                it.header
-            }
-        )
-
-        for (datum in data) {
-            add(
-                renderValuesToRow {
-                    it.formatValue(datum)
-                }
-            )
-        }
-
-    }
+    fun renderLines(): List<String> = AsciiTableRenderer(this@AsciiTable).renderLines()
 
 }
 

@@ -1,20 +1,25 @@
 package de.markuspatt.asciitables.builders
 
 import de.markuspatt.asciitables.AsciiTable
+import de.markuspatt.asciitables.NoBorder
+import de.markuspatt.asciitables.TableBorder
 import de.markuspatt.asciitables.TableColumn
 
 class AsciiTableBuilder internal constructor() {
 
     private val tableColumns: MutableList<TableColumn<*>> = ArrayList()
 
-    private var border: Border = NoBorder
+    private var border: TableBorder = NoBorder
 
     fun build(): AsciiTable {
         check(tableColumns.isNotEmpty()) {
             "unable to build AsciiTable without columns"
         }
 
-        return AsciiTable(tableColumns)
+        return AsciiTable(
+            tableColumns,
+            border
+        )
     }
 
     fun stringColumn(header: String, configure: StringColumnBuilder.() -> Unit = {}): AsciiTableBuilder {
@@ -64,10 +69,12 @@ class AsciiTableBuilder internal constructor() {
         border = NoBorder
     }
 
-    fun withBorder(configuration: () -> Unit = {}) {
-        TODO("Not yet implemented")
+    fun withBorder(configuration: BorderBuilder.() -> Unit = {}) {
+        val borderBuilder = BorderBuilderImpl()
+
+        configuration(borderBuilder)
+
+        border = borderBuilder.build()
     }
 
 }
-
-

@@ -1,5 +1,6 @@
 package de.markuspatt.asciitables
 
+import de.markuspatt.asciitables.builders.AsciiTableBuilder
 import java.io.StringWriter
 import java.util.*
 import kotlin.math.max

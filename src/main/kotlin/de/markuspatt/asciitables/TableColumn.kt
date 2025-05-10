@@ -2,7 +2,6 @@ package de.markuspatt.asciitables
 
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import kotlin.math.log10
 
 
 internal abstract class TableColumn<T>(
@@ -13,15 +12,11 @@ internal abstract class TableColumn<T>(
     val maxWidth: Int,
 ) {
 
-    fun validateValue(value: Any?): Boolean {
-        return (value == null) || validateType(value)
-    }
+    fun validateValue(value: Any?): Boolean = (value == null) || validateType(value)
 
     abstract fun validateType(value: Any): Boolean
 
-    fun getRequestedWidth(rowData: RowData): Int {
-        return doGetRequestedWidth(getValueFromRow(rowData))
-    }
+    fun getRequestedWidth(rowData: RowData): Int = doGetRequestedWidth(getValueFromRow(rowData))
 
     abstract fun doGetRequestedWidth(value: T): Int
 
@@ -29,9 +24,7 @@ internal abstract class TableColumn<T>(
 
     abstract fun getValueFromRow(rowData: RowData): T
 
-    fun formatValue(rowData: RowData): String {
-        return doFormatValue(getValueFromRow(rowData) ?: return "")
-    }
+    fun formatValue(rowData: RowData): String = getValueFromRow(rowData)?.let { doFormatValue(it) } ?: ""
 
 }
 
@@ -49,34 +42,23 @@ internal class StringColumn(
     maxWidth,
 ) {
 
-    override fun validateType(value: Any): Boolean {
-        return value is String
-    }
+    override fun validateType(value: Any): Boolean = value is String
 
-    override fun doGetRequestedWidth(value: String?): Int {
-        return value?.length ?: 0
-    }
+    override fun doGetRequestedWidth(value: String?): Int = value?.length ?: 0
 
-    override fun doFormatValue(value: String?): String {
-        return value ?: ""
-    }
+    override fun doFormatValue(value: String?): String = value ?: ""
 
-    override fun getValueFromRow(rowData: RowData): String? {
-        return rowData[index] as String?
-    }
-
-    companion object
-
+    override fun getValueFromRow(rowData: RowData): String? = rowData[index] as String?
 
 }
 
 internal class NumberColumn(
     index: Int,
     header: String,
-     align: Align,
-     minWidth: Int,
-     maxWidth: Int,
-    private val precision: Int
+    align: Align,
+    minWidth: Int,
+    maxWidth: Int,
+    private val precision: Int,
 ) : TableColumn<Number?>(
     index,
     header,
@@ -90,21 +72,13 @@ internal class NumberColumn(
         isGroupingUsed = false
     }
 
-    override fun validateType(value: Any): Boolean {
-        return value is Number
-    }
+    override fun validateType(value: Any): Boolean = value is Number
 
-    override fun doGetRequestedWidth(value: Number?): Int {
-        return if (value == null) 0 else (log10(value.toInt().toDouble()) + 1 + 1 + precision).toInt()
-    }
+    override fun doGetRequestedWidth(value: Number?): Int = doFormatValue(value).length
 
-    override fun doFormatValue(value: Number?): String {
-        return numberFormat.format(value)
-    }
+    override fun doFormatValue(value: Number?): String = numberFormat.format(value ?: 0)
 
-    override fun getValueFromRow(rowData: RowData): Number? {
-        return rowData[index] as Number?
-    }
+    override fun getValueFromRow(rowData: RowData): Number? = rowData[index] as Number?
 
 }
 

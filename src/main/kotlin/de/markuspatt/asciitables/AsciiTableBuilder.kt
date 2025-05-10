@@ -4,6 +4,8 @@ class AsciiTableBuilder internal constructor() {
 
     private val tableColumns: MutableList<TableColumn<*>> = ArrayList()
 
+    private var border: Border = NoBorder
+
     fun build(): AsciiTable {
         check(tableColumns.isNotEmpty()) {
             "unable to build AsciiTable without columns"
@@ -38,13 +40,11 @@ class AsciiTableBuilder internal constructor() {
 
     fun doubleColumn(
         header: String,
-        precision: Int,
         configure: DoubleColumnBuilder.() -> Unit = {},
     ): AsciiTableBuilder {
         val columnsBuilder = DoubleColumnBuilderImpl(tableColumns.size)
 
         columnsBuilder.header = header
-        columnsBuilder.precision = precision
 
         configure(columnsBuilder)
 
@@ -55,6 +55,14 @@ class AsciiTableBuilder internal constructor() {
 
     private fun addColumn(field: TableColumn<*>) {
         tableColumns.add(field)
+    }
+
+    fun withoutBorder() {
+        border = NoBorder
+    }
+
+    fun withBorder(function: () -> Unit = {}) {
+        TODO("Not yet implemented")
     }
 
 }
@@ -72,6 +80,7 @@ interface ColumnBuilder {
 }
 
 interface StringColumnBuilder : ColumnBuilder {
+
     var maxWidth: Int
 }
 
@@ -118,10 +127,10 @@ internal class StringColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<Str
 
 }
 
-internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<NumberColumn>(columnIndex), NumberColumnBuilder {
+internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<NumberColumn>(columnIndex),
+    NumberColumnBuilder {
 
     open var precision: Int = 2
-
 
 
     override fun build(): NumberColumn {
@@ -144,3 +153,7 @@ internal class DoubleColumnBuilderImpl(columnIndex: Int) : NumberColumnBuilderIm
     override var precision: Int = 2
 
 }
+
+internal interface Border
+
+internal object NoBorder : Border

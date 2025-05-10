@@ -52,67 +52,60 @@ class AsciiTable internal constructor(
 
     }
 
-    fun printToString(): String {
-        StringWriter().use { stringWriter ->
-            printTo(stringWriter)
-            stringWriter.flush()
-            return stringWriter.toString()
-        }
+    fun printToString(): String = StringWriter().use { stringWriter ->
+        printTo(stringWriter)
+        stringWriter.flush()
+        return stringWriter.toString()
     }
 
     fun printTo(target: Appendable) {
         renderLines().forEach { target.append("$it\n") }
     }
 
-    fun renderLines(): List<String> {
+    fun renderLines(): List<String> = buildList {
         val delimiter = " "
         val lastColumnIndex = columns.lastIndex
 
-        return buildList {
+        val cellRenderers = columns.associateWith {
+            CellRenderer(
+                max(it.minWidth, maxValueLengths[it]!!),
+                it.maxWidth,
+                it.align
+            )
+        }
 
-            val cellRenderers = columns.associateWith {
-                CellRenderer(
-                    max(it.minWidth, maxValueLengths[it]!!),
-                    it.maxWidth,
-                    it.align
+
+        StringJoiner(delimiter).let { headerRow ->
+            columns.forEachIndexed { columnIndex, tableColumn ->
+                val value = tableColumn.header
+                val lastColumn = columnIndex == lastColumnIndex
+
+                val valueToOutput = cellRenderers[tableColumn]!!.render(value)
+                headerRow.add(
+                    if (lastColumn) valueToOutput.trimEnd() else valueToOutput
                 )
             }
 
-
-            StringJoiner(delimiter).let { headerRow ->
-                columns.forEachIndexed { columnIndex, tableColumn ->
-                    val value = tableColumn.header
-                    val lastColumn = columnIndex == lastColumnIndex
-
-                    val valueToOutput = cellRenderers[tableColumn]!!.render(value)
-                    headerRow.add(
-                        if (lastColumn) valueToOutput.trimEnd() else valueToOutput
-                    )
-                }
-
-                add(headerRow.toString())
-            }
-
-
-            for (datum in data) {
-                val row = StringJoiner(delimiter)
-                columns.forEachIndexed { columnIndex, tableColumn ->
-                    val value = tableColumn.formatValue(datum)
-                    val lastColumn = columnIndex == lastColumnIndex
-
-                    val valueToOutput = cellRenderers[tableColumn]!!.render(value)
-                    row.add(
-                        if (lastColumn) valueToOutput.trimEnd() else valueToOutput
-                    )
-                }
-                add(row.toString())
-            }
-
+            add(headerRow.toString())
         }
+
+
+        for (datum in data) {
+            val row = StringJoiner(delimiter)
+            columns.forEachIndexed { columnIndex, tableColumn ->
+                val value = tableColumn.formatValue(datum)
+                val lastColumn = columnIndex == lastColumnIndex
+
+                val valueToOutput = cellRenderers[tableColumn]!!.render(value)
+                row.add(
+                    if (lastColumn) valueToOutput.trimEnd() else valueToOutput
+                )
+            }
+            add(row.toString())
+        }
+
     }
 
 }
 
-fun asciiTable(init: AsciiTableBuilder.() -> Unit): AsciiTable {
-    return AsciiTableBuilder().apply(init).build()
-}
+fun asciiTable(init: AsciiTableBuilder.() -> Unit): AsciiTable = AsciiTableBuilder().apply(init).build()

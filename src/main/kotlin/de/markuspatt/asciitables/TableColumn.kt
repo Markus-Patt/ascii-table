@@ -77,7 +77,7 @@ internal class NumberColumn(
     override fun getValueFromRow(rowData: RowData): Number? = rowData[index] as Number?
 
     companion object {
-        private fun defaultNumberFormat(precision: Int): DecimalFormat = DecimalFormat().apply {
+        internal fun defaultNumberFormat(precision: Int): DecimalFormat = DecimalFormat().apply {
             setMaximumFractionDigits(precision)
             isGroupingUsed = false
         }

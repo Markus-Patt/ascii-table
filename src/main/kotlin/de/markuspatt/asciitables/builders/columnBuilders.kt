@@ -4,6 +4,7 @@ import de.markuspatt.asciitables.Align
 import de.markuspatt.asciitables.NumberColumn
 import de.markuspatt.asciitables.StringColumn
 import de.markuspatt.asciitables.TableColumn
+import java.text.NumberFormat
 
 interface ColumnBuilder {
 
@@ -70,6 +71,7 @@ internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilde
 
     open var precision: Int = 2
 
+    open var numberFormat: NumberFormat? = null
 
     override fun build(): NumberColumn {
         return NumberColumn(
@@ -78,7 +80,8 @@ internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilde
             align,
             minWidth,
             Int.MAX_VALUE,
-            precision
+            precision,
+            numberFormat ?: NumberColumn.defaultNumberFormat(precision),
         )
     }
 

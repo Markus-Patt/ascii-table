@@ -1,9 +1,10 @@
 plugins {
     kotlin("jvm") version "2.1.20"
+    `maven-publish`
 }
 
 group = "de.markuspatt"
-version = "1.0-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -29,4 +30,19 @@ tasks.test {
 
 kotlin {
     jvmToolchain(21)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }

@@ -49,6 +49,7 @@ class AsciiTableTest : FunSpec({
     }
 
     context("single column") {
+
         test("print one string column without values") {
             val asciiTable = asciiTable {
                 stringColumn("dummy 1")
@@ -171,6 +172,62 @@ class AsciiTableTest : FunSpec({
 
         }
 
+
+    }
+
+    context("alignments") {
+
+        test("string center_right right") {
+            val asciiTable = asciiTable {
+                stringColumn("column 1") {
+                    align = Align.CENTER_RIGHT
+                }
+                stringColumn("column 2") {
+                    align = Align.RIGHT
+                }
+            }
+
+            asciiTable.add("a", "b")
+            asciiTable.add("aa", "bb")
+            asciiTable.add("aaa", "bbb")
+            asciiTable.add("aa a", "b bb")
+
+            asciiTable.printToString() shouldBe """
+            column 1 column 2
+            ....a...........b
+            ...aa..........bb
+            ...aaa........bbb
+            ..aa.a.......b.bb
+
+        """.trimIndent().replace('.', ' ')
+
+        }
+
+        test("string center_left right") {
+            val asciiTable = asciiTable {
+                stringColumn("column 1") {
+                    align = Align.CENTER_LEFT
+                }
+                stringColumn("column 2") {
+                    align = Align.RIGHT
+                }
+            }
+
+            asciiTable.add("a", "b")
+            asciiTable.add("aa", "bb")
+            asciiTable.add("aaa", "bbb")
+            asciiTable.add("aa a", "b bb")
+
+            asciiTable.printToString() shouldBe """
+            column 1 column 2
+            ...a............b
+            ...aa..........bb
+            ..aaa.........bbb
+            ..aa.a.......b.bb
+
+        """.trimIndent().replace('.', ' ')
+
+        }
 
     }
 

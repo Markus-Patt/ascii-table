@@ -7,7 +7,10 @@ import kotlin.math.log10
 
 internal abstract class TableColumn<T>(
     val index: Int,
-    val header: String
+    val header: String,
+    val align: Align,
+    val minWidth: Int,
+    val maxWidth: Int,
 ) {
 
     fun validateValue(value: Any?): Boolean {
@@ -30,15 +33,21 @@ internal abstract class TableColumn<T>(
         return doFormatValue(getValueFromRow(rowData) ?: return "")
     }
 
-    fun pad(value: String, width: Int): String {
-        val padding = " ".repeat(width - value.length)
-
-        return value + padding
-    }
-
 }
 
-internal class StringColumn(index: Int, header: String) : TableColumn<String?>(index, header) {
+internal class StringColumn(
+    index: Int,
+    header: String,
+    align: Align,
+    minWidth: Int,
+    maxWidth: Int,
+) : TableColumn<String?>(
+    index,
+    header,
+    align,
+    minWidth,
+    maxWidth,
+) {
 
     override fun validateType(value: Any): Boolean {
         return value is String
@@ -64,8 +73,17 @@ internal class StringColumn(index: Int, header: String) : TableColumn<String?>(i
 internal class NumberColumn(
     index: Int,
     header: String,
+     align: Align,
+     minWidth: Int,
+     maxWidth: Int,
     private val precision: Int
-) : TableColumn<Number?>(index, header) {
+) : TableColumn<Number?>(
+    index,
+    header,
+    align,
+    minWidth,
+    maxWidth,
+) {
 
     private val numberFormat: NumberFormat = DecimalFormat().apply {
         setMaximumFractionDigits(precision)
@@ -89,3 +107,5 @@ internal class NumberColumn(
     }
 
 }
+
+enum class Align { LEFT, CENTER_LEFT, CENTER_RIGHT, RIGHT }

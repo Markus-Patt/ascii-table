@@ -1,7 +1,5 @@
 package de.markuspatt.asciitables
 
-import de.markuspatt.asciitables.ColumnBuilder.Align
-
 class AsciiTableBuilder internal constructor() {
 
     private val tableColumns: MutableList<TableColumn<*>> = ArrayList()
@@ -73,9 +71,6 @@ interface ColumnBuilder {
 
     var maxWidth: Int
 
-
-    enum class Align { LEFT, CENTER, RIGHT }
-
 }
 
 interface StringColumnBuilder : ColumnBuilder
@@ -112,7 +107,7 @@ internal class StringColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<Str
     StringColumnBuilder {
 
     override fun build(): StringColumn {
-        return StringColumn(columnIndex, header)
+        return StringColumn(columnIndex, header, align, minWidth, maxWidth)
     }
 
 }
@@ -122,7 +117,7 @@ internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilde
     open var precision: Int = 2
 
     override fun build(): NumberColumn {
-        return NumberColumn(columnIndex, header, precision)
+        return NumberColumn(columnIndex, header, align, minWidth, maxWidth, precision)
     }
 
 }

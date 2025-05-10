@@ -2,6 +2,7 @@ package de.markuspatt.asciitables
 
 import java.io.StringWriter
 import java.util.*
+import kotlin.math.max
 
 internal typealias RowData = List<Any?>
 
@@ -12,11 +13,8 @@ class AsciiTable internal constructor(
 
     private val data = ArrayList<RowData>()
 
-    private val maxValueLengths: IntArray = IntArray(columns.size).apply {
-        for (i in indices) {
-            this[i] = columns[i].header.length
-        }
-    }
+    private val maxValueLengths: MutableMap<TableColumn<*>, Int> =
+        columns.associateWith { it.header.length }.toMutableMap()
 
     fun add(vararg values: Any?) {
         add(values.toList())
@@ -29,13 +27,13 @@ class AsciiTable internal constructor(
 
         for (i in values.indices) {
             val tableColumn = columns[i]
-            updateMaxValueLengths(i, tableColumn.getRequestedWidth(values))
+            updateMaxValueLengths(tableColumn, tableColumn.getRequestedWidth(values))
         }
     }
 
-    private fun updateMaxValueLengths(index: Int, value: Int) {
-        if (maxValueLengths[index] < value) {
-            maxValueLengths[index] = value
+    private fun updateMaxValueLengths(tableColumn: TableColumn<*>, value: Int) {
+        if (maxValueLengths[tableColumn]!! < value) {
+            maxValueLengths[tableColumn] = value
         }
     }
 
@@ -67,43 +65,44 @@ class AsciiTable internal constructor(
     }
 
     fun renderLines(): List<String> {
-        return buildList<String> {
-            val delimiter = " "
-            val headerRow = StringJoiner(delimiter)
+        val delimiter = " "
+        val lastColumnIndex = columns.lastIndex
 
-            val lastIndex = columns.lastIndex
+        return buildList {
 
-            columns.forEachIndexed { index, tableColumn ->
-                val value = tableColumn.header
-                val width = if (index == lastIndex)
-                    value.length
-                else
-                    maxValueLengths[tableColumn.index]
-
-                headerRow.add(
-                    tableColumn.pad(
-                        value,
-                        width
-                    )
+            val cellRenderers = columns.associateWith {
+                CellRenderer(
+                    max(it.minWidth, maxValueLengths[it]!!),
+                    it.maxWidth,
+                    it.align
                 )
             }
 
-            add(headerRow.toString())
+
+            StringJoiner(delimiter).let { headerRow ->
+                columns.forEachIndexed { columnIndex, tableColumn ->
+                    val value = tableColumn.header
+                    val lastColumn = columnIndex == lastColumnIndex
+
+                    val valueToOutput = cellRenderers[tableColumn]!!.render(value)
+                    headerRow.add(
+                        if (lastColumn) valueToOutput.trimEnd() else valueToOutput
+                    )
+                }
+
+                add(headerRow.toString())
+            }
+
 
             for (datum in data) {
                 val row = StringJoiner(delimiter)
-                columns.forEachIndexed { index, tableColumn ->
+                columns.forEachIndexed { columnIndex, tableColumn ->
                     val value = tableColumn.formatValue(datum)
-                    val width = if (index == lastIndex)
-                        value.length
-                    else
-                        maxValueLengths[tableColumn.index]
+                    val lastColumn = columnIndex == lastColumnIndex
 
+                    val valueToOutput = cellRenderers[tableColumn]!!.render(value)
                     row.add(
-                        tableColumn.pad(
-                            value,
-                            width
-                        )
+                        if (lastColumn) valueToOutput.trimEnd() else valueToOutput
                     )
                 }
                 add(row.toString())

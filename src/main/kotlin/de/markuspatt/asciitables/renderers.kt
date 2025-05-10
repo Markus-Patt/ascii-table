@@ -9,7 +9,7 @@ internal class CellRenderer(
     val align: Align,
 ) {
 
-    fun render(value: String): String {
+    fun renderValue(value: String): String {
         val valueToRender = value.substring(0, min(value.length, maxWidth))
         val paddingLength = max(minWidth - value.length, 0)
 

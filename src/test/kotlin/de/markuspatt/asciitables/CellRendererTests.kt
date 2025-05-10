@@ -13,18 +13,18 @@ class CellRendererTests : FunSpec({
         )
 
         // @formatter:off
-        cellRenderer.render("")            shouldBe "     "
-        cellRenderer.render("1")           shouldBe "1    "
-        cellRenderer.render("12")          shouldBe "12   "
-        cellRenderer.render("123")         shouldBe "123  "
-        cellRenderer.render("1234")        shouldBe "1234 "
-        cellRenderer.render("12345")       shouldBe "12345"
-        cellRenderer.render("123456")      shouldBe "123456"
-        cellRenderer.render("1234567")     shouldBe "1234567"
-        cellRenderer.render("12345678")    shouldBe "12345678"
-        cellRenderer.render("123456789")   shouldBe "123456789"
-        cellRenderer.render("1234567890")  shouldBe "1234567890"
-        cellRenderer.render("12345678901") shouldBe "1234567890"
+        cellRenderer.renderValue("")            shouldBe "     "
+        cellRenderer.renderValue("1")           shouldBe "1    "
+        cellRenderer.renderValue("12")          shouldBe "12   "
+        cellRenderer.renderValue("123")         shouldBe "123  "
+        cellRenderer.renderValue("1234")        shouldBe "1234 "
+        cellRenderer.renderValue("12345")       shouldBe "12345"
+        cellRenderer.renderValue("123456")      shouldBe "123456"
+        cellRenderer.renderValue("1234567")     shouldBe "1234567"
+        cellRenderer.renderValue("12345678")    shouldBe "12345678"
+        cellRenderer.renderValue("123456789")   shouldBe "123456789"
+        cellRenderer.renderValue("1234567890")  shouldBe "1234567890"
+        cellRenderer.renderValue("12345678901") shouldBe "1234567890"
         // @formatter:on
     }
 
@@ -36,18 +36,18 @@ class CellRendererTests : FunSpec({
         )
 
         // @formatter:off
-        cellRenderer.render("")            shouldBe      "     "
-        cellRenderer.render("1")           shouldBe      "    1"
-        cellRenderer.render("12")          shouldBe      "   12"
-        cellRenderer.render("123")         shouldBe      "  123"
-        cellRenderer.render("1234")        shouldBe      " 1234"
-        cellRenderer.render("12345")       shouldBe      "12345"
-        cellRenderer.render("123456")      shouldBe     "123456"
-        cellRenderer.render("1234567")     shouldBe    "1234567"
-        cellRenderer.render("12345678")    shouldBe   "12345678"
-        cellRenderer.render("123456789")   shouldBe  "123456789"
-        cellRenderer.render("1234567890")  shouldBe "1234567890"
-        cellRenderer.render("12345678901") shouldBe "1234567890"
+        cellRenderer.renderValue("")            shouldBe      "     "
+        cellRenderer.renderValue("1")           shouldBe      "    1"
+        cellRenderer.renderValue("12")          shouldBe      "   12"
+        cellRenderer.renderValue("123")         shouldBe      "  123"
+        cellRenderer.renderValue("1234")        shouldBe      " 1234"
+        cellRenderer.renderValue("12345")       shouldBe      "12345"
+        cellRenderer.renderValue("123456")      shouldBe     "123456"
+        cellRenderer.renderValue("1234567")     shouldBe    "1234567"
+        cellRenderer.renderValue("12345678")    shouldBe   "12345678"
+        cellRenderer.renderValue("123456789")   shouldBe  "123456789"
+        cellRenderer.renderValue("1234567890")  shouldBe "1234567890"
+        cellRenderer.renderValue("12345678901") shouldBe "1234567890"
         // @formatter:on
     }
 
@@ -59,18 +59,18 @@ class CellRendererTests : FunSpec({
         )
 
         // @formatter:off
-        cellRenderer.render("")            shouldBe      "     "
-        cellRenderer.render("1")           shouldBe      "  1  "
-        cellRenderer.render("12")          shouldBe      " 12  "
-        cellRenderer.render("123")         shouldBe      " 123 "
-        cellRenderer.render("1234")        shouldBe      "1234 "
-        cellRenderer.render("12345")       shouldBe      "12345"
-        cellRenderer.render("123456")      shouldBe     "123456"
-        cellRenderer.render("1234567")     shouldBe    "1234567"
-        cellRenderer.render("12345678")    shouldBe   "12345678"
-        cellRenderer.render("123456789")   shouldBe  "123456789"
-        cellRenderer.render("1234567890")  shouldBe "1234567890"
-        cellRenderer.render("12345678901") shouldBe "1234567890"
+        cellRenderer.renderValue("")            shouldBe      "     "
+        cellRenderer.renderValue("1")           shouldBe      "  1  "
+        cellRenderer.renderValue("12")          shouldBe      " 12  "
+        cellRenderer.renderValue("123")         shouldBe      " 123 "
+        cellRenderer.renderValue("1234")        shouldBe      "1234 "
+        cellRenderer.renderValue("12345")       shouldBe      "12345"
+        cellRenderer.renderValue("123456")      shouldBe     "123456"
+        cellRenderer.renderValue("1234567")     shouldBe    "1234567"
+        cellRenderer.renderValue("12345678")    shouldBe   "12345678"
+        cellRenderer.renderValue("123456789")   shouldBe  "123456789"
+        cellRenderer.renderValue("1234567890")  shouldBe "1234567890"
+        cellRenderer.renderValue("12345678901") shouldBe "1234567890"
         // @formatter:on
     }
 
@@ -82,18 +82,18 @@ class CellRendererTests : FunSpec({
         )
 
         // @formatter:off
-        cellRenderer.render("")            shouldBe      "     "
-        cellRenderer.render("1")           shouldBe      "  1  "
-        cellRenderer.render("12")          shouldBe      "  12 "
-        cellRenderer.render("123")         shouldBe      " 123 "
-        cellRenderer.render("1234")        shouldBe      " 1234"
-        cellRenderer.render("12345")       shouldBe      "12345"
-        cellRenderer.render("123456")      shouldBe     "123456"
-        cellRenderer.render("1234567")     shouldBe    "1234567"
-        cellRenderer.render("12345678")    shouldBe   "12345678"
-        cellRenderer.render("123456789")   shouldBe  "123456789"
-        cellRenderer.render("1234567890")  shouldBe "1234567890"
-        cellRenderer.render("12345678901") shouldBe "1234567890"
+        cellRenderer.renderValue("")            shouldBe      "     "
+        cellRenderer.renderValue("1")           shouldBe      "  1  "
+        cellRenderer.renderValue("12")          shouldBe      "  12 "
+        cellRenderer.renderValue("123")         shouldBe      " 123 "
+        cellRenderer.renderValue("1234")        shouldBe      " 1234"
+        cellRenderer.renderValue("12345")       shouldBe      "12345"
+        cellRenderer.renderValue("123456")      shouldBe     "123456"
+        cellRenderer.renderValue("1234567")     shouldBe    "1234567"
+        cellRenderer.renderValue("12345678")    shouldBe   "12345678"
+        cellRenderer.renderValue("123456789")   shouldBe  "123456789"
+        cellRenderer.renderValue("1234567890")  shouldBe "1234567890"
+        cellRenderer.renderValue("12345678901") shouldBe "1234567890"
         // @formatter:on
     }
 

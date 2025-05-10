@@ -59,6 +59,7 @@ internal class NumberColumn(
     minWidth: Int,
     maxWidth: Int,
     private val precision: Int,
+    private val numberFormat: NumberFormat = defaultNumberFormat(precision),
 ) : TableColumn<Number?>(
     index,
     header,
@@ -66,11 +67,6 @@ internal class NumberColumn(
     minWidth,
     maxWidth,
 ) {
-
-    private val numberFormat: NumberFormat = DecimalFormat().apply {
-        setMaximumFractionDigits(precision)
-        isGroupingUsed = false
-    }
 
     override fun validateType(value: Any): Boolean = value is Number
 
@@ -80,6 +76,15 @@ internal class NumberColumn(
 
     override fun getValueFromRow(rowData: RowData): Number? = rowData[index] as Number?
 
+    companion object {
+        private fun defaultNumberFormat(precision: Int): DecimalFormat = DecimalFormat().apply {
+            setMaximumFractionDigits(precision)
+            isGroupingUsed = false
+        }
+
+    }
+
 }
+
 
 enum class Align { LEFT, CENTER_LEFT, CENTER_RIGHT, RIGHT }

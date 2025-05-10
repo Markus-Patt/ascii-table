@@ -64,7 +64,6 @@ class AsciiTable internal constructor(
 
     fun renderLines(): List<String> = buildList {
         val delimiter = " "
-        val lastColumnIndex = columns.lastIndex
 
         val cellRenderers = columns.associateWith {
             CellRenderer(
@@ -74,34 +73,32 @@ class AsciiTable internal constructor(
             )
         }
 
+        val renderValuesToRow: ((TableColumn<*>) -> String) -> String = { formatValue ->
+            StringJoiner(delimiter).let { row ->
+                columns
+                    .map { it to cellRenderers[it]!! }
+                    .map { (tableColumn, renderer) -> formatValue(tableColumn) to renderer }
+                    .map { (value, renderer) -> renderer.renderValue(value) }
+                    .forEach(row::add)
 
-        StringJoiner(delimiter).let { headerRow ->
-            columns.forEachIndexed { columnIndex, tableColumn ->
-                val value = tableColumn.header
-                val lastColumn = columnIndex == lastColumnIndex
-
-                val valueToOutput = cellRenderers[tableColumn]!!.render(value)
-                headerRow.add(
-                    if (lastColumn) valueToOutput.trimEnd() else valueToOutput
-                )
+                row.toString().trimEnd()
             }
 
-            add(headerRow.toString())
         }
 
 
-        for (datum in data) {
-            val row = StringJoiner(delimiter)
-            columns.forEachIndexed { columnIndex, tableColumn ->
-                val value = tableColumn.formatValue(datum)
-                val lastColumn = columnIndex == lastColumnIndex
-
-                val valueToOutput = cellRenderers[tableColumn]!!.render(value)
-                row.add(
-                    if (lastColumn) valueToOutput.trimEnd() else valueToOutput
-                )
+        add(
+            renderValuesToRow {
+                it.header
             }
-            add(row.toString())
+        )
+
+        for (datum in data) {
+            add(
+                renderValuesToRow {
+                    it.formatValue(datum)
+                }
+            )
         }
 
     }

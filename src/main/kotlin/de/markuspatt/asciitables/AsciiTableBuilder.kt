@@ -69,11 +69,11 @@ interface ColumnBuilder {
 
     var minWidth: Int
 
-    var maxWidth: Int
-
 }
 
-interface StringColumnBuilder : ColumnBuilder
+interface StringColumnBuilder : ColumnBuilder {
+    var maxWidth: Int
+}
 
 interface NumberColumnBuilder : ColumnBuilder
 
@@ -96,8 +96,6 @@ internal abstract class ColumnBuilderImpl<T : TableColumn<*>>(
 
     override var minWidth: Int = 0
 
-    override var maxWidth: Int = Integer.MAX_VALUE
-
 
     internal abstract fun build(): T
 
@@ -106,8 +104,16 @@ internal abstract class ColumnBuilderImpl<T : TableColumn<*>>(
 internal class StringColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<StringColumn>(columnIndex),
     StringColumnBuilder {
 
+    override var maxWidth: Int = Integer.MAX_VALUE
+
     override fun build(): StringColumn {
-        return StringColumn(columnIndex, header, align, minWidth, maxWidth)
+        return StringColumn(
+            columnIndex,
+            header,
+            align,
+            minWidth,
+            maxWidth
+        )
     }
 
 }
@@ -116,8 +122,17 @@ internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilde
 
     open var precision: Int = 2
 
+
+
     override fun build(): NumberColumn {
-        return NumberColumn(columnIndex, header, align, minWidth, maxWidth, precision)
+        return NumberColumn(
+            columnIndex,
+            header,
+            align,
+            minWidth,
+            Int.MAX_VALUE,
+            precision
+        )
     }
 
 }

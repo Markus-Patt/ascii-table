@@ -2,6 +2,7 @@ package de.markuspatt.asciitables
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
@@ -46,6 +47,17 @@ class AsciiTableTest : FunSpec({
                 )
             }
         }
+
+        test("add with wrong column count throws") {
+            val table = asciiTable {
+                stringColumn("dummy 1")
+            }
+
+            assertThrows<IllegalArgumentException> {
+                table.add("", "")
+            }.shouldHaveMessage("wrong number of arguments: expected 1, got 2")
+        }
+
     }
 
     context("single column") {

@@ -4,6 +4,7 @@ import de.markuspatt.asciitables.AsciiTable
 import de.markuspatt.asciitables.NoBorder
 import de.markuspatt.asciitables.TableBorder
 import de.markuspatt.asciitables.TableColumn
+import java.text.NumberFormat
 
 class AsciiTableBuilder internal constructor() {
 
@@ -55,6 +56,26 @@ class AsciiTableBuilder internal constructor() {
         columnsBuilder.header = header
 
         configure(columnsBuilder)
+
+        addColumn(columnsBuilder.build())
+
+        return this
+    }
+
+    fun percentColumn(
+        header: String,
+        configure: DoubleColumnBuilder.() -> Unit = {},
+    ): AsciiTableBuilder {
+        val columnsBuilder = DoubleColumnBuilderImpl(tableColumns.size)
+
+        columnsBuilder.header = header
+
+        configure(columnsBuilder)
+
+        columnsBuilder.numberFormat = NumberFormat.getPercentInstance().apply {
+            maximumFractionDigits = columnsBuilder.precision
+        }
+
 
         addColumn(columnsBuilder.build())
 

@@ -129,6 +129,24 @@ class AsciiTableTest : FunSpec({
         """.trimIndent()
         }
 
+        test("print one percent column with one value") {
+            val asciiTable = asciiTable {
+                percentColumn("dummy 1")
+            }
+
+            asciiTable.add(
+                listOf(
+                    0.54
+                )
+            )
+
+            asciiTable.printToString() shouldBe """
+            dummy 1
+            54 %
+
+        """.trimIndent()
+        }
+
     }
 
     context("multiple columns") {

@@ -238,6 +238,41 @@ class AcceptanceTests : FunSpec({
 
         }
 
+        test("outer horizontal border") {
+            val asciiTable = asciiTable {
+                withBorder {
+                    edge = null
+                    vertical = null
+                    horizontal = '='
+                    innerBorder = false
+                }
+
+                stringColumn("dummy 1")
+                longColumn("dummy 2") {
+                    align = Align.RIGHT
+                }
+                doubleColumn("dummy 3") {
+                    align = Align.RIGHT
+
+                    precision = 1
+                }
+            }
+
+            asciiTable.add(
+                "asd", 1234567890, 1234567890.12345
+            )
+
+            asciiTable.printToString() shouldBe """
+                ===============================
+                dummy 1    dummy 2      dummy 3
+                asd     1234567890 1234567890,1
+                ===============================
+    
+            """.trimIndent()
+
+        }
+
+
 
     }
 

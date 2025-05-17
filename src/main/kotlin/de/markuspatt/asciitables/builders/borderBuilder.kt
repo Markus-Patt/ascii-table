@@ -11,6 +11,8 @@ interface BorderBuilder {
 
     var edge: Char?
 
+    var innerBorder: Boolean
+
 }
 
 internal class BorderBuilderImpl() : BorderBuilder {
@@ -18,11 +20,12 @@ internal class BorderBuilderImpl() : BorderBuilder {
     override var vertical: Char? = '|'
     override var horizontal: Char? = '-'
     override var edge: Char? = '+'
+    override var innerBorder: Boolean = true
 
     fun build(): TableBorder {
         validate()
 
-        return TableBorderImpl(vertical, horizontal, edge)
+        return TableBorderImpl(vertical, horizontal, edge, innerBorder)
     }
 
     private fun validate() {

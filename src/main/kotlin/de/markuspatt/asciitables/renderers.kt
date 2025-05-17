@@ -63,7 +63,7 @@ internal class AsciiTableRenderer(
             renderValues { it.header }
         )
 
-        if (border.horizontal != null) {
+        if ((border.horizontal != null) && (border.innerBorder)) {
             renderHorizontalBorderRow()
         }
 
@@ -72,9 +72,13 @@ internal class AsciiTableRenderer(
                 renderValues { it.formatValue(datum) }
             )
 
-            if (border.horizontal != null) {
+            if ((border.horizontal != null) && (border.innerBorder)) {
                 renderHorizontalBorderRow()
             }
+        }
+
+        if ((border.horizontal != null) && (!border.innerBorder)) {
+            renderHorizontalBorderRow()
         }
 
 

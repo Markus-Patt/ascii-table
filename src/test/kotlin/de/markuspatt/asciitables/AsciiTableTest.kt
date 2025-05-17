@@ -124,7 +124,7 @@ class AsciiTableTest : FunSpec({
 
             asciiTable.printToString() shouldBe """
             dummy 1
-            1
+                  1
 
         """.trimIndent()
         }
@@ -142,7 +142,7 @@ class AsciiTableTest : FunSpec({
 
             asciiTable.printToString() shouldBe """
             dummy 1
-            54 %
+               54 %
 
         """.trimIndent()
         }

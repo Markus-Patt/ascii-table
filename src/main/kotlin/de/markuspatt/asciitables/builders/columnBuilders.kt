@@ -73,6 +73,11 @@ internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilde
 
     open var numberFormat: NumberFormat? = null
 
+    init {
+        align = Align.RIGHT
+    }
+
+
     override fun build(): NumberColumn {
         return NumberColumn(
             columnIndex,

@@ -32,6 +32,12 @@ kotlin {
     jvmToolchain(21)
 }
 
+// Create a sources JAR
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -40,6 +46,9 @@ publishing {
             version = project.version.toString()
 
             from(components["java"])
+
+            // Include the sources JAR
+            artifact(sourcesJar.get())
         }
     }
     repositories {

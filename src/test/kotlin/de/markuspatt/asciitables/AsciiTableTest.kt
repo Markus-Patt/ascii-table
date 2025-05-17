@@ -68,9 +68,9 @@ class AsciiTableTest : FunSpec({
             }
 
             asciiTable.printToString() shouldBe """
-            dummy 1
-
-        """.trimIndent()
+                dummy 1
+    
+            """.trimIndent()
 
         }
 
@@ -86,10 +86,10 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1
-            value 1
-
-        """.trimIndent()
+                dummy 1
+                value 1
+    
+            """.trimIndent()
 
         }
 
@@ -105,10 +105,10 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1
-            
-
-        """.trimIndent()
+                dummy 1
+                
+    
+            """.trimIndent()
         }
 
         test("print one long column with one value") {
@@ -123,10 +123,10 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1
-                  1
-
-        """.trimIndent()
+                dummy 1
+                      1
+    
+            """.trimIndent()
         }
 
         test("print one percent column with one value") {
@@ -141,10 +141,10 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1
-               54 %
-
-        """.trimIndent()
+                dummy 1
+                   54 %
+    
+            """.trimIndent()
         }
 
         test("print two progressBar columns with two value") {
@@ -164,11 +164,11 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1    dummy 2
-                       xx
-            =====      xxxxxxxxxxxxxxxxxxxx
-
-        """.trimIndent()
+                dummy 1    dummy 2
+                           xx
+                =====      xxxxxxxxxxxxxxxxxxxx
+    
+            """.trimIndent()
         }
 
     }
@@ -181,9 +181,9 @@ class AsciiTableTest : FunSpec({
             }
 
             asciiTable.printToString() shouldBe """
-            dummy 1 dummy 2
-
-        """.trimIndent()
+                dummy 1 dummy 2
+    
+            """.trimIndent()
 
         }
 
@@ -199,10 +199,10 @@ class AsciiTableTest : FunSpec({
             )
 
             asciiTable.printToString() shouldBe """
-            dummy 1 dummy 2
-            value 1 value 2
-
-        """.trimIndent()
+                dummy 1 dummy 2
+                value 1 value 2
+    
+            """.trimIndent()
 
         }
 
@@ -217,12 +217,12 @@ class AsciiTableTest : FunSpec({
             asciiTable.add("value 1.3", "value 2.3")
 
             asciiTable.printToString() shouldBe """
-            dummy 1   dummy 2
-            value 1.1 value 2.1
-            value 1.2 value 2.2
-            value 1.3 value 2.3
-
-        """.trimIndent()
+                dummy 1   dummy 2
+                value 1.1 value 2.1
+                value 1.2 value 2.2
+                value 1.3 value 2.3
+    
+            """.trimIndent()
 
         }
 
@@ -247,13 +247,13 @@ class AsciiTableTest : FunSpec({
             asciiTable.add("aa a", "b bb")
 
             asciiTable.printToString() shouldBe """
-            column 1 column 2
-            ....a...........b
-            ...aa..........bb
-            ...aaa........bbb
-            ..aa.a.......b.bb
-
-        """.trimIndent().replace('.', ' ')
+                column 1 column 2
+                ....a...........b
+                ...aa..........bb
+                ...aaa........bbb
+                ..aa.a.......b.bb
+    
+            """.trimIndent().replace('.', ' ')
 
         }
 
@@ -273,13 +273,13 @@ class AsciiTableTest : FunSpec({
             asciiTable.add("aa a", "b bb")
 
             asciiTable.printToString() shouldBe """
-            column 1 column 2
-            ...a............b
-            ...aa..........bb
-            ..aaa.........bbb
-            ..aa.a.......b.bb
-
-        """.trimIndent().replace('.', ' ')
+                column 1 column 2
+                ...a............b
+                ...aa..........bb
+                ..aaa.........bbb
+                ..aa.a.......b.bb
+    
+            """.trimIndent().replace('.', ' ')
 
         }
 

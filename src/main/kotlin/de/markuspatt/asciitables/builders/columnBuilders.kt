@@ -12,24 +12,36 @@ interface ColumnBuilder {
 
     var header: String
 
+}
+
+interface CommonColumnBuilder : ColumnBuilder {
+
     var align: Align
 
     var minWidth: Int
 
 }
 
-interface StringColumnBuilder : ColumnBuilder {
+interface StringColumnBuilder : CommonColumnBuilder {
 
     var maxWidth: Int
 }
 
-interface NumberColumnBuilder : ColumnBuilder
+interface NumberColumnBuilder : CommonColumnBuilder
 
 interface LongColumnBuilder : NumberColumnBuilder
 
 interface DoubleColumnBuilder : NumberColumnBuilder {
 
     var precision: Int
+
+}
+
+interface ProgressBarColumnBuilder : ColumnBuilder {
+
+    var width: Int
+
+    var barChar: Char
 
 }
 
@@ -40,16 +52,21 @@ internal abstract class ColumnBuilderImpl<T : TableColumn<*>>(
 
     override var header: String = ""
 
-    override var align: Align = Align.LEFT
-
-    override var minWidth: Int = 0
-
-
     internal abstract fun build(): T
 
 }
 
-internal class StringColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<StringColumn>(columnIndex),
+internal abstract class CommonColumnBuilderImpl<T : TableColumn<*>>(
+    columnIndex: Int,
+) : ColumnBuilderImpl<T>(columnIndex), CommonColumnBuilder {
+
+    override var align: Align = Align.LEFT
+
+    override var minWidth: Int = 0
+
+}
+
+internal class StringColumnBuilderImpl(columnIndex: Int) : CommonColumnBuilderImpl<StringColumn>(columnIndex),
     StringColumnBuilder {
 
     override var maxWidth: Int = Integer.MAX_VALUE
@@ -66,7 +83,7 @@ internal class StringColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<Str
 
 }
 
-internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : ColumnBuilderImpl<NumberColumn>(columnIndex),
+internal abstract class NumberColumnBuilderImpl(columnIndex: Int) : CommonColumnBuilderImpl<NumberColumn>(columnIndex),
     NumberColumnBuilder {
 
     open var precision: Int = 2
@@ -97,5 +114,28 @@ internal class LongColumnBuilderImpl(columnIndex: Int) : NumberColumnBuilderImpl
 internal class DoubleColumnBuilderImpl(columnIndex: Int) : NumberColumnBuilderImpl(columnIndex), DoubleColumnBuilder {
 
     override var precision: Int = 2
+
+}
+
+internal class ProgressBarColumnBuilderImpl(columnIndex: Int) :
+    ColumnBuilderImpl<StringColumn>(columnIndex),
+    ProgressBarColumnBuilder {
+
+    override var width: Int = 10
+
+    override var barChar: Char = '='
+
+    override fun build(): StringColumn {
+        return StringColumn(columnIndex, header, Align.LEFT, width, width) {
+            if (it == null) return@StringColumn null
+            check(it is Number) { "progress bar column only accepts numbers, got $it" }
+
+            val percent = it.toDouble()/* / 100*/
+            val filled = (percent * width).toInt()
+            val remaining = width - filled
+            val progress = barChar.toString().repeat(filled) + " ".repeat(remaining)
+            progress
+        }
+    }
 
 }

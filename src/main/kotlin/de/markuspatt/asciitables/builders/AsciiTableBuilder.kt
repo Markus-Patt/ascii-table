@@ -82,6 +82,21 @@ class AsciiTableBuilder internal constructor() {
         return this
     }
 
+    fun progressBarColumn(
+        header: String,
+        configure: ProgressBarColumnBuilder.() -> Unit = {},
+    ): AsciiTableBuilder {
+        val columnsBuilder = ProgressBarColumnBuilderImpl(tableColumns.size)
+
+        columnsBuilder.header = header
+
+        configure(columnsBuilder)
+
+        addColumn(columnsBuilder.build())
+
+        return this
+    }
+
     private fun addColumn(field: TableColumn<*>) {
         tableColumns.add(field)
     }

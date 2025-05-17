@@ -16,9 +16,7 @@ internal abstract class TableColumn<T>(
 
     abstract fun validateType(value: Any): Boolean
 
-    fun getRequestedWidth(rowData: RowData): Int = doGetRequestedWidth(getValueFromRow(rowData))
-
-    abstract fun doGetRequestedWidth(value: T): Int
+    fun getRequestedWidth(rowData: RowData): Int = doFormatValue(getValueFromRow(rowData)).length
 
     abstract fun doFormatValue(value: T): String
 
@@ -34,6 +32,7 @@ internal class StringColumn(
     align: Align,
     minWidth: Int,
     maxWidth: Int,
+    private val convertValue: (Any?) -> String? = { it?.toString() },
 ) : TableColumn<String?>(
     index,
     header,
@@ -42,13 +41,11 @@ internal class StringColumn(
     maxWidth,
 ) {
 
-    override fun validateType(value: Any): Boolean = value is String
-
-    override fun doGetRequestedWidth(value: String?): Int = value?.length ?: 0
+    override fun validateType(value: Any): Boolean = convertValue(value) is String
 
     override fun doFormatValue(value: String?): String = value ?: ""
 
-    override fun getValueFromRow(rowData: RowData): String? = rowData[index] as String?
+    override fun getValueFromRow(rowData: RowData): String? = convertValue(rowData[index])
 
 }
 
@@ -69,8 +66,6 @@ internal class NumberColumn(
 ) {
 
     override fun validateType(value: Any): Boolean = value is Number
-
-    override fun doGetRequestedWidth(value: Number?): Int = doFormatValue(value).length
 
     override fun doFormatValue(value: Number?): String = numberFormat.format(value ?: 0)
 

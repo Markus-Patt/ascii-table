@@ -147,6 +147,30 @@ class AsciiTableTest : FunSpec({
         """.trimIndent()
         }
 
+        test("print two progressBar columns with two value") {
+            val asciiTable = asciiTable {
+                progressBarColumn("dummy 1")
+                progressBarColumn("dummy 2") {
+                    width = 20
+                    barChar = 'x'
+                }
+            }
+
+            asciiTable.add(
+                0, 0.1
+            )
+            asciiTable.add(
+                0.5, 1.0
+            )
+
+            asciiTable.printToString() shouldBe """
+            dummy 1    dummy 2
+                       xx
+            =====      xxxxxxxxxxxxxxxxxxxx
+
+        """.trimIndent()
+        }
+
     }
 
     context("multiple columns") {

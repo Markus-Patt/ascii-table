@@ -43,6 +43,8 @@ interface ProgressBarColumnBuilder : ColumnBuilder {
 
     var barChar: Char
 
+    var emptyChar: Char
+
 }
 
 
@@ -125,7 +127,12 @@ internal class ProgressBarColumnBuilderImpl(columnIndex: Int) :
 
     override var barChar: Char = '='
 
+    override var emptyChar: Char = ' '
+
     override fun build(): StringColumn {
+        check(width > 0) { "progress bar column width must be greater than zero" }
+        check(barChar != emptyChar) { "progress bar column barChar must not be the same as emptyChar" }
+
         return StringColumn(columnIndex, header, Align.LEFT, width, width) {
             if (it == null) return@StringColumn null
             check(it is Number) { "progress bar column only accepts numbers, got $it" }
@@ -133,7 +140,7 @@ internal class ProgressBarColumnBuilderImpl(columnIndex: Int) :
             val percent = it.toDouble()/* / 100*/
             val filled = (percent * width).toInt()
             val remaining = width - filled
-            val progress = barChar.toString().repeat(filled) + " ".repeat(remaining)
+            val progress = barChar.toString().repeat(filled) + emptyChar.toString().repeat(remaining)
             progress
         }
     }

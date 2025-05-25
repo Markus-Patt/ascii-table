@@ -171,6 +171,28 @@ class AsciiTableTest : FunSpec({
             """.trimIndent()
         }
 
+        test("print progressBar column with emptyChar") {
+            val asciiTable = asciiTable {
+                progressBarColumn("dummy 1") {
+                    width = 10
+                    barChar = 'x'
+                    emptyChar = '-'
+                }
+            }
+
+            asciiTable.add(0)
+            asciiTable.add(0.5)
+            asciiTable.add(1.0)
+
+            asciiTable.printToString() shouldBe """
+                dummy 1
+                ----------
+                xxxxx-----
+                xxxxxxxxxx
+    
+            """.trimIndent()
+        }
+
     }
 
     context("multiple columns") {
